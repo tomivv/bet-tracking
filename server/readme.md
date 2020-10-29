@@ -30,12 +30,12 @@ create bets table
 ````
 create table bets (
   id serial primary key,
-  user_id references users(id),
+  user_id int references users(id),
   amount numeric,
   odds numeric,
-  home_team_id references teams(id),
-  away_team_id references teams(id),
-  team_bet_on_id references teams(id),
+  home_team_id int references teams(id),
+  away_team_id int references teams(id),
+  team_bet_on_id int references teams(id),
   won boolean
 );
 ````
