@@ -71,6 +71,20 @@ app.post("/teams", (req, res) => {
   );
 });
 
+app.get("/games", (req, res) => {
+  client.query(
+    "select name from games order by name asc",
+    (error, response) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send("error");
+      } else {
+        res.send(response.rows);
+      }
+    }
+  );
+});
+
 app.post("/games", (req, res) => {
   const { name } = req.body;
   client.query(

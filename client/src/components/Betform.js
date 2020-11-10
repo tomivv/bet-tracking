@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+const apiUri = "http://localhost:3001";
 
 export default function Betform({ showModal, setModal }) {
   const [teams, setTeams] = useState(null);
+  const [games, setGames] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     game: "",
@@ -14,11 +16,16 @@ export default function Betform({ showModal, setModal }) {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3001/teams")
+    fetch(`${apiUri}/teams`)
       .then((res) => res.json())
       .then((result) => {
         setTeams(result);
-        setLoading(false);
+        fetch(`${apiUri}/games`)
+          .then((res) => res.json())
+          .then((result) => {
+            setGames(result);
+            setLoading(false);
+          });
       });
   }, []);
 
@@ -27,7 +34,7 @@ export default function Betform({ showModal, setModal }) {
     if (e.target.id === "add") {
       console.log("adding new data...");
 
-      fetch("http://localhost:3001/", {
+      fetch(`${apiUri}`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -51,11 +58,11 @@ export default function Betform({ showModal, setModal }) {
         value = parseFloat(value);
       }
     }
-
     let newInput = Object.assign({}, data);
     newInput[id] = value;
     setData(newInput);
   }
+
   if (!loading) {
     return (
       <div className="modal-card">
@@ -76,8 +83,9 @@ export default function Betform({ showModal, setModal }) {
                 <div className="select">
                   <select onChange={handleInputChange} id="game">
                     <option>Select Game</option>
-                    <option>Counter-Strike: Global Offensive</option>
-                    <option>League of Legends</option>
+                    {games.map((team, index) => (
+                      <option key={index}>{team.name}</option>
+                    ))}
                   </select>
                 </div>
               </div>

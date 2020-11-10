@@ -1,4 +1,5 @@
 ## Setting up server
+
 1. run `npm install`
 2. populate .env file with correct dabase information
 3. run `npm start` to run server or `npm run dev` to run development server
@@ -6,28 +7,29 @@
 ## Setting up postgresql database
 
 create users table
-````
+
+```
 create table users (
   id serial primary key,
   name varchar(255),
   email varchar(255),
   isAdmin boolean
 );
-````
+```
 
 create teams table
 
-````
+```
 create table teams (
   id serial primary key,
   name varchar(255)
 );
 
-````
+```
 
 create bets table
 
-````
+```
 create table bets (
   id serial primary key,
   user_id int references users(id),
@@ -38,4 +40,4 @@ create table bets (
   team_bet_on_id int references teams(id),
   won boolean
 );
-````
+```
