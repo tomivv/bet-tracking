@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+const apiUri = "http://localhost:3001";
 
 export default function Showbets() {
   const [betdata, setBetdata] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3001")
+    fetch(`${apiUri}`)
       .then((res) => res.json())
       .then((result) => {
         setBetdata(result);
@@ -18,7 +19,7 @@ export default function Showbets() {
   }
   if (!loading) {
     return (
-      <table className="table is-fullwidth is-hoverable is-striped">
+      <table className="table is-narrow is-fullwidth is-hoverable is-striped">
         <thead>
           <tr>
             <th>Date</th>
@@ -28,7 +29,6 @@ export default function Showbets() {
             <th>Away team</th>
             <th>Bet team</th>
             <th>Won</th>
-            <th>Game</th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,6 @@ export default function Showbets() {
               <th>{item.away_team}</th>
               <th>{item.bet_team}</th>
               <th>{item.won ? "Won" : "Lost"}</th>
-              <th>{item.game_name}</th>
             </tr>
           ))}
         </tbody>

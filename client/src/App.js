@@ -1,20 +1,29 @@
-import React, { useState } from "react";
-import Modal from "./components/Modal";
+import React from "react";
+import Modal from "./components/shared/Modal";
 import Nav from "./components/Nav";
+// import Notification from "./components/shared/Notification";
 import Showbets from "./components/Showbets";
+import { ModalProvider } from "./contexts/ModalContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
+import useModal from "./hooks/useModal";
+import useNotification from "./hooks/useNotification";
 
 function App() {
-  const [modal, setModal] = useState(false);
-  const [modalType, setModaltype] = useState(null);
+  const { notification, changeNotification } = useNotification();
+  const { modal, changeModal } = useModal();
   return (
-    <section className="section">
-      <Nav setModal={setModal} showModal={modal} setModaltype={setModaltype} />
-      <div className="container">
-        <h1 className="title has-text-centered">Bets</h1>
-        <Modal showModal={modal} setModal={setModal} modalType={modalType} />
-        <Showbets />
-      </div>
-    </section>
+    <ModalProvider value={changeModal}>
+      <NotificationProvider value={changeNotification}>
+        <section className="section">
+          <Nav />
+          <div className="container">
+            <h1 className="title has-text-centered">Bets</h1>
+            <Modal modal={modal} notification={notification} />
+            <Showbets />
+          </div>
+        </section>
+      </NotificationProvider>
+    </ModalProvider>
   );
 }
 

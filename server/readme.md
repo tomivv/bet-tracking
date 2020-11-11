@@ -24,7 +24,24 @@ create table teams (
   id serial primary key,
   name varchar(255)
 );
+```
 
+create games table
+
+```
+create table teams (
+  id serial primary key,
+  name varchar(255)
+);
+```
+
+create sites table
+
+```
+create table teams (
+  id serial primary key,
+  name varchar(255)
+);
 ```
 
 create bets table
@@ -38,6 +55,10 @@ create table bets (
   home_team_id int references teams(id),
   away_team_id int references teams(id),
   team_bet_on_id int references teams(id),
-  won boolean
+  game_id int references games(id),
+  site_id int references sites(id),
+  won boolean,
+  bet_created_at date not null default current_date,
+  updated_at date
 );
 ```

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { ModalContext } from "../../contexts/ModalContext";
 const apiUri = "http://localhost:3001";
 
-export default function Betform({ showModal, setModal }) {
-  const [teams, setTeams] = useState(null);
-  const [games, setGames] = useState(null);
+export default function Betform() {
+  const changeModal = useContext(ModalContext);
+  const [information, setInformation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     game: "",
@@ -16,24 +17,18 @@ export default function Betform({ showModal, setModal }) {
   });
 
   useEffect(() => {
-    fetch(`${apiUri}/teams`)
+    fetch(`${apiUri}/general/information`)
       .then((res) => res.json())
       .then((result) => {
-        setTeams(result);
-        fetch(`${apiUri}/games`)
-          .then((res) => res.json())
-          .then((result) => {
-            setGames(result);
-            setLoading(false);
-          });
+        console.log(result);
+        setInformation(result);
+        setLoading(false);
       });
   }, []);
 
   function handleClose(e) {
     e.preventDefault();
-    if (e.target.id === "add") {
-      console.log("adding new data...");
-
+    if (e.target.id === "add" || e.type === "submit") {
       fetch(`${apiUri}`, {
         method: "POST",
         mode: "cors",
@@ -44,10 +39,15 @@ export default function Betform({ showModal, setModal }) {
       })
         .then((res) => res.json())
         .then((result) => {
-          console.log(result);
+          if (result.code !== 201) {
+            changeModal({ hidden: true, type: "" });
+          } else {
+            changeModal({ hidden: true, type: "" });
+          }
         });
+    } else {
+      changeModal({ hidden: true, type: "" });
     }
-    setModal(!showModal);
   }
 
   function handleInputChange(e) {
@@ -76,15 +76,28 @@ export default function Betform({ showModal, setModal }) {
           ></button>
         </header>
         <section className="modal-card-body">
-          <form>
+          <form onSubmit={handleClose}>
+            <div className="field">
+              <label className="label">Site</label>
+              <div className="control">
+                <div className="select">
+                  <select onChange={handleInputChange} id="game">
+                    <option>Select Site</option>
+                    {information.sites.map((site, index) => (
+                      <option key={index}>{site.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
             <div className="field">
               <label className="label">Game</label>
               <div className="control">
                 <div className="select">
                   <select onChange={handleInputChange} id="game">
                     <option>Select Game</option>
-                    {games.map((team, index) => (
-                      <option key={index}>{team.name}</option>
+                    {information.games.map((game, index) => (
+                      <option key={index}>{game.name}</option>
                     ))}
                   </select>
                 </div>
@@ -129,7 +142,7 @@ export default function Betform({ showModal, setModal }) {
                 <div className="select">
                   <select onChange={handleInputChange} id="home">
                     <option>Select Team</option>
-                    {teams.map((team, index) => (
+                    {information.teams.map((team, index) => (
                       <option key={index}>{team.name}</option>
                     ))}
                   </select>
@@ -143,7 +156,7 @@ export default function Betform({ showModal, setModal }) {
                 <div className="select">
                   <select onChange={handleInputChange} id="away">
                     <option>Select Team</option>
-                    {teams.map((team, index) => (
+                    {information.teams.map((team, index) => (
                       <option key={index}>{team.name}</option>
                     ))}
                   </select>

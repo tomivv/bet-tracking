@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ModalContext } from "../../contexts/ModalContext";
+const apiUri = "http://localhost:3001";
 
-export default function Teamform({ showModal, setModal }) {
+export default function Gameform() {
+  const changeModal = useContext(ModalContext);
   const [formdata, setFormdata] = useState({
     name: "",
   });
+  const [serverResponse, setServerResponse] = useState("");
 
   function handleClose(e) {
     e.preventDefault();
-    if (e.target.id === "add") {
-      console.log("adding new data...");
-      fetch("http://localhost:3001/teams", {
+    if (e.target.id === "add" || e.type === "submit") {
+      fetch(`${apiUri}/games`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -19,10 +22,15 @@ export default function Teamform({ showModal, setModal }) {
       })
         .then((res) => res.json())
         .then((result) => {
-          console.log(result);
+          if (result.code !== 201) {
+            setServerResponse(result.msg);
+          } else {
+            changeModal({ hidden: true, type: "" });
+          }
         });
+    } else {
+      changeModal({ hidden: true, type: "" });
     }
-    setModal(!showModal);
   }
 
   function handleInputChange(e) {
@@ -41,7 +49,7 @@ export default function Teamform({ showModal, setModal }) {
   return (
     <div className="modal-card">
       <header className="modal-card-head">
-        <p className="modal-card-title">Add new team</p>
+        <p className="modal-card-title">Add new game</p>
         <button
           className="delete"
           aria-label="close"
@@ -50,19 +58,20 @@ export default function Teamform({ showModal, setModal }) {
         ></button>
       </header>
       <section className="modal-card-body">
-        <form>
+        <form onSubmit={handleClose}>
           <div className="field">
             <label className="label">Name</label>
             <div className="control">
               <input
                 className="input"
                 type="text"
-                placeholder="Ence"
+                placeholder="League of Legends"
                 value={formdata.name}
                 onChange={handleInputChange}
                 id="name"
               />
             </div>
+            <p class="help is-danger">{serverResponse}</p>
           </div>
         </form>
       </section>
