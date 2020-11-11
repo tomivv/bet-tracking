@@ -29,7 +29,7 @@ create table teams (
 create games table
 
 ```
-create table teams (
+create table games (
   id serial primary key,
   name varchar(255)
 );
@@ -38,7 +38,7 @@ create table teams (
 create sites table
 
 ```
-create table teams (
+create table sites (
   id serial primary key,
   name varchar(255)
 );
