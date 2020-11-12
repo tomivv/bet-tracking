@@ -24,18 +24,18 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const { game, amount, odds, home, away, bet, won } = req.body;
+  const { game, amount, odds, home, away, bet, won, site } = req.body;
 
   client.query(
-    "insert into bets (user_id, amount, odds, home_team_id, away_team_id, team_bet_on_id, won, game_id) values ((SELECT id from users WHERE name=$1), $2, $3, (SELECT id from teams WHERE name=$4),(SELECT id from teams WHERE name=$5),(SELECT id from teams WHERE name=$6),$7,(SELECT id from games WHERE name=$8))",
-    ["tomi", amount, odds, home, away, bet, won, game],
+    "insert into bets (user_id, amount, odds, home_team_id, away_team_id, team_bet_on_id, won, game_id, site_id) values ((SELECT id from users WHERE name=$1), $2, $3, (SELECT id from teams WHERE name=$4),(SELECT id from teams WHERE name=$5),(SELECT id from teams WHERE name=$6),$7,(SELECT id from games WHERE name=$8),(SELECT id from sites WHERE name=$9))",
+    ["tomi", amount, odds, home, away, bet, won, game, site],
     (error, result) => {
       if (error) {
         // code for constaint: unique
         if (error.code === "23505") {
           res.status(403).json({
             code: 403,
-            msg: `There is already team with name of ${name}`,
+            msg: `duplicate`,
           });
         } else {
           res.status(400).json({

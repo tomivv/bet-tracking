@@ -7,6 +7,7 @@ export default function Betform() {
   const [information, setInformation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
+    site: "",
     game: "",
     amount: 10,
     odds: 1.76,
@@ -81,7 +82,7 @@ export default function Betform() {
               <label className="label">Site</label>
               <div className="control">
                 <div className="select">
-                  <select onChange={handleInputChange} id="game">
+                  <select onChange={handleInputChange} id="site">
                     <option>Select Site</option>
                     {information.sites.map((site, index) => (
                       <option key={index}>{site.name}</option>
