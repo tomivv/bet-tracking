@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-const apiUri = "http://localhost:3001";
+import { apiUri }  from "../contexts/apiUri";
 
 export default function Showbets() {
   const [betdata, setBetdata] = useState(null);
