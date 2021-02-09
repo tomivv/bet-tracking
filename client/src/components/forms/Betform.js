@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
-import { apiUri }  from "../../contexts/apiUri";
+const apiUri = "http://localhost:3001";
 
 export default function Betform() {
   const changeModal = useContext(ModalContext);
@@ -27,7 +27,7 @@ export default function Betform() {
       });
   }, []);
 
-  function handleClose(e: any) {
+  function handleClose(e) {
     e.preventDefault();
     if (e.target.id === "add" || e.type === "submit") {
       fetch(`${apiUri}`, {
@@ -51,7 +51,7 @@ export default function Betform() {
     }
   }
 
-  function handleInputChange(e: any) {
+  function handleInputChange(e) {
     const id = e.target.id;
     let value = e.target.value;
     if (id === "amount" || id === "odds") {

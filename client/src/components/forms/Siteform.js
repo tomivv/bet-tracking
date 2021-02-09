@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { ModalContext } from "../../contexts/ModalContext";
-import { apiUri }  from "../../contexts/apiUri";
+const apiUri = "http://localhost:3001";
 
-export default function Teamform() {
+export default function Siteform() {
   const changeModal = useContext(ModalContext);
   const [formdata, setFormdata] = useState({
     name: "",
@@ -12,7 +12,7 @@ export default function Teamform() {
   function handleClose(e) {
     e.preventDefault();
     if (e.target.id === "add" || e.type === "submit") {
-      fetch(`${apiUri}/teams`, {
+      fetch(`${apiUri}/sites`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -49,7 +49,7 @@ export default function Teamform() {
   return (
     <div className="modal-card">
       <header className="modal-card-head">
-        <p className="modal-card-title">Add new team</p>
+        <p className="modal-card-title">Add new betting site</p>
         <button
           className="delete"
           aria-label="close"
@@ -65,7 +65,7 @@ export default function Teamform() {
               <input
                 className="input"
                 type="text"
-                placeholder="Ence"
+                placeholder="Coolbet.com"
                 value={formdata.name}
                 onChange={handleInputChange}
                 id="name"
