@@ -19,7 +19,28 @@ export default function Showbets() {
   }
   if (!loading) {
     return (
-      <table className="table is-narrow is-fullwidth is-hoverable is-striped">
+      <div>
+        <div className="tile is-ancestor">
+        <div className="tile is-parent">
+            <article className="tile is-child notification is-success has-text-centered">
+              <p className="title">Total bets</p>
+              <p className="subtitle">{betdata.total}</p>
+            </article>
+          </div>
+          <div className="tile is-parent">
+            <article className="tile is-child notification is-success has-text-centered">
+              <p className="title">Average odds</p>
+              <p className="subtitle">{betdata.avgOdd.toFixed(2)}</p>
+            </article>
+          </div>
+          <div className="tile is-parent">
+            <article className="tile is-child notification is-success has-text-centered">
+              <p className="title">Win ratio</p>
+              <p className="subtitle">{((betdata.wins/betdata.total)*100).toFixed(2)}%<br />({betdata.wins}/{betdata.losses})</p>
+            </article>
+          </div>
+        </div>
+        <table className="table is-narrow is-fullwidth is-hoverable is-striped">
         <thead>
           <tr>
             <th>Date</th>
@@ -32,7 +53,7 @@ export default function Showbets() {
           </tr>
         </thead>
         <tbody>
-          {betdata.map((item, index) => (
+          {betdata.queryData.map((item, index) => (
             <tr key={index}>
               <th>{item.bet_created_at}</th>
               <th>{item.amount}</th>
@@ -45,6 +66,8 @@ export default function Showbets() {
           ))}
         </tbody>
       </table>
+      </div>
+      
     );
   }
 }
