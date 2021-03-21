@@ -50,8 +50,8 @@ app.post("/", (req, res) => {
   // assing variables
   const date = split[1];
   const game = split[2];
-  const home = split[3].split(" ")[0];
-  const away = split[3].split(" ")[2];
+  const home = split[3].split("vs.")[0];
+  const away = split[3].split("vs.")[1];
   const amount = split[6];
   const odds = split[7];
   const bet = split[8];
