@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-const apiUri = "http://localhost:3001";
+import { apiUri } from "./shared/apiUri";
 
 export default function Showbets() {
   const [betdata, setBetdata] = useState(null);
@@ -21,7 +21,7 @@ export default function Showbets() {
     return (
       <div>
         <div className="tile is-ancestor">
-        <div className="tile is-parent">
+          <div className="tile is-parent">
             <article className="tile is-child notification is-success has-text-centered">
               <p className="title">Total bets</p>
               <p className="subtitle">{betdata.total}</p>

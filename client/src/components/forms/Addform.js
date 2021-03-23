@@ -15,7 +15,6 @@ export default function Betform() {
     fetch(`${apiUri}/sites`)
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         setInformation(result);
         setLoading(false);
       });

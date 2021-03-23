@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { client } = require("./db.js");
-const { monthsToNumber } = require("./helpers");
+const { parseEmpire, parseCb } = require("./helpers");
 
 const app = express();
 const port = 3001;
@@ -29,7 +29,6 @@ app.get("/", (req, res) => {
             losses += 1;
           }
         }
-        console.log(avgOdd);
         res.send({
           queryData: response.rows,
           total: response.rowCount,
@@ -45,37 +44,44 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
   // get data from body and split betString to array
   const { site, betString } = req.body;
-  const split = betString.split("\t");
 
-  // assing variables
-  const date = split[1];
-  const game = split[2];
-  const home = split[3].split("vs.")[0];
-  const away = split[3].split("vs.")[1];
-  const amount = split[6];
-  const odds = split[7];
-  const bet = split[8];
-  const winner = split[9];
+  let date = "";
+  let game = "";
+  let home = "";
+  let away = "";
+  let amount = "";
+  let odds = "";
+  let bet = "";
+  let winner = "";
 
-  // change date to psql format
-  psqlDate = "";
-  if (date.split(" ").length > 4) {
-    psqlDate = `${date.split(" ")[3]}-${monthsToNumber(date.split(" ")[2].replace(",", ""))}-${
-      date.split(" ")[1]
-    }`;
-  } else {
-    psqlDate = `${new Date().getFullYear()}-${monthsToNumber(date.split(" ")[2])}-${
-      date.split(" ")[1]
-    }`;
+  if (site === "coolbet.com") {
+    const parse = parseCb(betString);
+
+    date = parse.date;
+    game = parse.game;
+    home = parse.home;
+    away = parse.away;
+    amount = parse.amount;
+    odds = parse.odds;
+    bet = parse.bet;
+    winner = parse.winner;
+  } else if (site === "csgoempire.com") {
+    const parse = parseEmpire(betString);
+
+    date = parse.date;
+    game = parse.game;
+    home = parse.home;
+    away = parse.away;
+    amount = parse.amount;
+    odds = parse.odds;
+    bet = parse.bet;
+    winner = parse.winner;
   }
-  // checking if bet is won or lost
-  let won = false;
-  if (bet === winner) {
-    won = true;
-  }
+  
+
   client.query(
     "INSERT INTO BETS (user_id, amount, odds, home_team, away_team, bet_team, won, game, site_id, bet_created_at) VALUES ((SELECT id FROM users WHERE name=$1), $2, $3, $4, $5, $6, $7, $8, (SELECT id FROM sites WHERE name=$9), $10)",
-    ["Tomi", amount, odds, home, away, bet, won, game, site, psqlDate],
+    ["Tomi", amount, odds, home, away, bet, winner, game, site, date],
     (error, result) => {
       if (error) {
         // code for constaint: unique
